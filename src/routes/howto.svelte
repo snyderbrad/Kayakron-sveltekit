@@ -1,4 +1,6 @@
 <script lang="ts">
+    export const prerender = true;
+    export const ssr = true;
 	export let imageSlide;
 	let imageState = imageSlide;
 	let imageUrl = 'logo.jpg';
