@@ -1,3 +1,4 @@
+export const prerender = true
 import { describe, it, expect } from 'vitest';
 
 describe('sum test', () => {

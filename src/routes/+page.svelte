@@ -1,4 +1,6 @@
 <script lang="ts">
+    export const prerender = true;
+    export const ssr = true;
 	import { onMount } from 'svelte';
 	let ready = false;
 	onMount(() => {
@@ -6,6 +8,7 @@
 		scrollSlides(1);
 	});
 
+    let letters = ['E', 'x', 'p', 'l', 'o', 'r', 'e', ' ', 'T', 'h', 'e', ' ', 'R', 'i', 'v', 'e', 'r', ''];
 	let slideIndex = 1;
 	let imageUrl = 'logo.jpg';
 	let image1 = 'pic1-600.jpg';
@@ -58,46 +61,12 @@
 			<div class="topnav">
 				<a href="tel:3306060543" id="phone" class="fa fa-mobile-phone">&nbsp;(330) 606-0543</a>
 				<a target="_blank" id="howto" rel="noopener noreferrer" href={infographic}>How To</a>
-			</div>
-			<div class="svg-container">
-			<svg viewBox="0 0 100 30">
-				<defs>
-					<linearGradient id="gradient">
-						<stop color="#000" />
-					</linearGradient>
-					<pattern
-						id="wave"
-						x="0"
-						y="-0.5"
-						width="50vw"
-						height="50vh"
-						patternUnits="userSpaceOnUse"
-					>
-						<path
-							id="wavePath"
-							d="M-40 9 Q-30 7 -20 9 T0 9 T20 9 T40 9 T60 9 T80 9 T100 9 T120 9 V20 H-40z"
-							mask="url(#mask)"
-							fill="white"
-						>
-							<animateTransform
-								attributeName="transform"
-								begin="0s"
-								dur="1.5s"
-								type="translate"
-								from="0,0"
-								to="40,0"
-								repeatCount="indefinite"
-							/>
-						</path>
-					</pattern>
-				</defs>
-				<text text-anchor="middle" x="50" y="15" fill="white" fill-opacity="0.01"
-					>Explore the river!</text
-				>
-				<text text-anchor="middle" x="50" y="15" fill="url(#wave)" fill-opacity="1">Explore the river!
-					</text>
-			</svg>
-			</div>
+            </div>
+            <div class="wavy">
+                {#each letters as letter, index}
+                    <span style="--i:{index}">{letter}</span>
+                {/each}
+            </div>
 		</div>
 		<div class="about-column" id="about">
 			<p class="about">
@@ -149,8 +118,7 @@
 </main>
 <div class="bottom-info">
 	<a href="tel:3306060543" class="fa fa-mobile-phone">&nbsp;&nbsp;&nbsp;(330) 606-0543</a>
-	<a href="mailto:kayakron@gmail.com" class="fa fa-envelope"
-		>&nbsp;&nbsp;&nbsp;kayakakron@gmail.com</a
+	<a href="mailto:kayakron@gmail.com" class="fa fa-envelope">kayakakron@gmail.com</a
 	>
 </div>
 
@@ -236,7 +204,6 @@
 	}
 
 	.about-column {
-		margin-bottom: 150px;
 		margin-top: 50px;
 		align-content: center;
 		/* background-color: #c5b867; */
@@ -283,14 +250,18 @@
 		margin: 0px;
 		padding-top: 5vh;
 	}
-.dot {visibility: hidden;}
+
+    .dot {visibility: hidden;}
 
 	.slide-image {
 		max-height: 100vh;
 		max-width: 100vw;
 	}
-main {position: absolute; left: 0px;max-width: 100vw;}
-	.mySlides {
+    main {
+        position: absolute; left: 0px;max-width: 100vw;
+    }
+
+    .mySlides {
 		display: none;
 	}
 
@@ -317,10 +288,6 @@ main {position: absolute; left: 0px;max-width: 100vw;}
 		right: 0;
 		border-radius: 3px 0 0 3px;
 	}
-/*
-	.prev:focus,
-	.next:focus {
-	} */
 
 	.numbertext {
 		color: #495d4e;
@@ -368,6 +335,34 @@ main {position: absolute; left: 0px;max-width: 100vw;}
 		border-radius: 25px;
 	}
 
+    .wavy {
+        position: relative;
+    }
+
+     .wavy span {
+        position: relative;
+        display: inline-block;
+        color: #fff;
+        font-size: 2em;
+        text-transform: uppercase;
+        animation: animate 2s ease-in-out infinite;
+        animation-delay: calc(0.1s * var(--i));
+    }
+
+    @keyframes animate {
+        0% {
+            transform: translateY(0px);
+        }
+
+        20% {
+            transform: translateY(-20px);
+        }
+
+        40%,
+        100% {
+            transform: translateY(0px);
+        }
+    }
 	@-webkit-keyframes fade {
 		from {
 			opacity: 0.4;
@@ -406,18 +401,5 @@ main {position: absolute; left: 0px;max-width: 100vw;}
 		}
 	}
 
-	.svg-container {
-		font-size: 0.5em;
-		width: 60vw;
-		max-width: 60vw;
-		height: 100vh;
-	}
-	@import url(https://fonts.googleapis.com/css?family=Cabin+Condensed);
 
-	svg {
-		font-weight: bold;
-		max-width: 100vw;
-        width: 50vw;
-		height: 100%;
-	}
 </style>
