@@ -12,6 +12,7 @@
 	let image2 = 'pic2-600.jpg';
 	let image3 = 'pic3-600.jpg';
 	let image4 = 'pic4-600.jpg';
+    let slideshowImages = ['pic1-600.jpg','pic2-600.jpg','pic3-600.jpg','pic4-600.jpg' ]
 	let infographic = '/Infographic.pdf';
 	let howto = 'howto.svelte';
 	const plusSlides = async () => scrollSlides((slideIndex += 1));
@@ -108,6 +109,14 @@
 			</p>
 		</div>
 		<div class="slideshow-container">
+            {#each slideshowImages as image}
+			<div class="mySlides fade">
+                <figure>
+                    <img src={image} class = "slide-image" />
+                </figure>
+            </div>
+            {/each}
+            <!---
 			<div class="mySlides fade">
 				<div class="numbertext">1 / 4</div>
 				{#if ready}
@@ -128,6 +137,7 @@
 				<div class="numbertext">4 / 4</div>
 				<img src={image4} alt="" class="slide-image" />
 			</div>
+            --->
 			<div class="prev" on:click={plusSlidesDown}>
 				<p>&#10094;</p>
 			</div>
