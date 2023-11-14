@@ -1,16 +1,25 @@
 <script lang="ts">
+    import { Hamburger } from 'svelte-hamburgers';
+
+    let open;
+    import { quintOut } from 'svelte/easing';
+	import { fade, draw, fly } from 'svelte/transition';
+	import { expand } from './custom-transitions.js';
+	import { inner, outer } from './shape.js';
+
+	let visible = false;
     export const prerender = true;
     export const ssr = true;
 	import { onMount } from 'svelte';
 	let ready = false;
 	onMount(() => {
 		ready = true;
+        visible = true;
 		scrollSlides(1);
 	});
 
-    let letters = ['E', 'x', 'p', 'l', 'o', 'r', 'e', ' ', 'T', 'h', 'e', ' ', 'R', 'i', 'v', 'e', 'r', ''];
 	let slideIndex = 1;
-	let imageUrl = 'logo.jpg';
+	let imageUrl = 'welcome-photo.jpg';
 	let image1 = 'pic1-600.jpg';
 	let image2 = 'pic2-600.jpg';
 	let image3 = 'pic3-600.jpg';
@@ -48,6 +57,7 @@
 		slides[slideIndex - 1].setAttribute('style', 'display:block;');
 		dots[slideIndex - 1].className += ' active';
 	}
+
 </script>
 
 <link
@@ -57,19 +67,36 @@
 
 <main>
 	<div class="align-horizontally">
-		<div id="welcome" class="header">
+		<div class="header">
 			<div class="topnav">
-				<a href="tel:3306060543" id="phone" class="fa fa-mobile-phone">&nbsp;(330) 606-0543</a>
-				<a target="_blank" id="howto" rel="noopener noreferrer" href={infographic}>How To</a>
+                <Hamburger bind:open />
+                {#if open}
+                    <a href="tel:3306060543" class="header-text fa fa-mobile-phone">&nbsp;(330) 606-0543</a>
+                    <a target="_blank" rel="noopener noreferrer" class="header-text" href={infographic}>How To</a>
+                {/if}
             </div>
-            <div class="wavy">
-                {#each letters as letter, index}
-                    <span style="--i:{index}">{letter}</span>
-                {/each}
-            </div>
+            {#if visible}
+                <svg width="100vw" height="50vh" viewBox="0 0 623 396" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g out:fade={{ duration: 200 }} opacity="1">
+                        <path
+                            in:expand={{ duration: 10, easing: quintOut }}
+                            style="stroke: #6f4930; fill: #56903a; stroke-width: 50;"
+                            d={outer}
+                        />
+                        <path in:draw={{ duration: 11000 }} style="stroke:#FFFFFF; stroke-width: 1.4" d={inner} />
+                    </g>
+                </svg>
+
+                <div class="centered" out:fly={{ y: -20, duration: 800 }}>
+                    {#each 'Explore The River!' as char, i}
+                        <span in:fade|global={{ delay: 500 + i * 150, duration: 700 }}>{char}</span>
+                    {/each}
+                </div>
+            {/if}
 		</div>
-		<div class="about-column" id="about">
-			<p class="about">
+		<div class="about-column">
+			<img class="about" src={imageUrl} alt=""/>
+			<p>
 				<b> Kayakron </b> is a kayak outfitter located in Akron, Ohio. We provide a fully equipped kayak
 				so you can enjoy your time on the water. Our drop-off service includes a licensed kayak, paddle,
 				PFD (life preserver), as well as dry storage. For an hourly or daily rate, our kayaks can be
@@ -111,9 +138,6 @@
 				<span class="dot" on:click={currentSlideFour} />
 			</div>
 		</div>
-		<div class="about-column" id="about">
-			<img src={imageUrl} alt="" style="max-width: 50vw" />
-		</div>
 	</div>
 </main>
 <div class="bottom-info">
@@ -122,14 +146,13 @@
 	>
 </div>
 
-<!-- </div> -->
 <style scoped>
 	:global(body) {
 		background-color: #c5b867;
 	}
+
 	#phone {
 		width: auto;
-		padding: 3px;
 		text-align: center;
 		border-radius: 10px;
 		background-color: #495d4e;
@@ -140,34 +163,12 @@
 
 	#howto {
 		width: auto;
-		padding: 3px;
 		text-align: center;
 		border-radius: 10px;
 		background-color: #495d4e;
 		color: #c5b867;
 		text-decoration: none;
 		font-size: 1em;
-	}
-
-	#welcome {
-		color: #c5b867;
-		max-width: 100vw;
-		min-width: 65vw;
-		max-width: 75vw;
-		height: 50vh;
-		max-height: 50vh;
-		float: left;
-		padding: 0px;
-		margin: -10px;
-		background-image: url('/welcome-photo.jpg');
-		background-position: center;
-		background-repeat: no-repeat; /* Do not repeat the image */
-		background-size: cover;
-		font-family: 'Cabin Condensed', sans-serif;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
 	}
 
 	.topnav {
@@ -177,7 +178,6 @@
 		width: 95vw;
 		font-size: 1.5em;
 		overflow: hidden;
-		padding: 20px 10px;
         display: flex;
         flex-direction: row;
         gap: 10px;
@@ -193,33 +193,23 @@
 		margin: 0px;
 		padding: 0px;
 		border-radius: 25px;
-		text-align: center;
 	}
 
-	#phone {
-		text-align: center;
-		align-content: center;
-		padding-right: 10px;
-		padding-left: 12px;
-	}
+	.about-column img {
+        float: right;
+    }
+
+    .about {
+        width: 40vw;
+        padding-right: 10px;
+    }
 
 	.about-column {
+        width: 100vw;
+		font-size: 2.5em;
 		margin-top: 50px;
-		align-content: center;
-		/* background-color: #c5b867; */
-		width: 100%;
+		width: 100vw;
 		color: darkslategrey;
-	}
-
-	.about {
-		text-align: center;
-		font-size: 1.5em;
-		margin-left: 25px;
-		margin-right: 25px;
-		padding-left: 13%;
-		padding-right: 13%;
-		/* padding-top: 10px; */
-		/* height: 100%; */
 	}
 
 	.bottom-info {
@@ -247,6 +237,8 @@
 		width: 100vw;
 		position: relative;
 		/* margin: auto; */
+        display: flex;
+        justify-content: center;
 		margin: 0px;
 		padding-top: 5vh;
 	}
@@ -255,38 +247,44 @@
 
 	.slide-image {
 		max-height: 100vh;
-		max-width: 100vw;
+        height: auto;
 	}
-    main {
-        position: absolute; left: 0px;max-width: 100vw;
-    }
 
     .mySlides {
 		display: none;
 	}
 
 	/* Next & previous buttons */
-	.prev,
-	.next {
+	.prev
+	{
 		cursor: pointer;
 		position: absolute;
 		top: 50%;
+        left: 25%;
 		width: auto;
 		margin-top: -30vh;
-		padding: 100px;
 		color: white;
 		font-weight: bold;
 		font-size: 5em;
 		transition: 0.6s ease;
 		border-radius: 0 3px 3px 0;
 		user-select: none;
-		-webkit-tap-highlight-color:transparent;
 	}
 
 	/* Position the "next button" to the right */
 	.next {
-		right: 0;
-		border-radius: 3px 0 0 3px;
+		cursor: pointer;
+		position: absolute;
+		top: 50%;
+        right: 25%;
+		width: auto;
+		margin-top: -30vh;
+		color: white;
+		font-weight: bold;
+		font-size: 5em;
+		transition: 0.6s ease;
+		border-radius: 0 3px 3px 0;
+		user-select: none;
 	}
 
 	.numbertext {
@@ -323,31 +321,22 @@
 		animation-duration: 0.2s;
 	}
 
-	.header a {
-		float: left;
-		color: black;
+	.header-text {
+        text-decoration: none;
+        color: #333333;
+        padding: 2px 6px 2px 6px;
+        border-top: 1px solid #CCCCCC;
+        border-right: 1px solid #333333;
+        border-bottom: 1px solid #333333;
+        border-left: 1px solid #CCCCCC;
+        float: left;
+        justify-content: center;
 		background-color: #495d4e;
-		text-align: center;
-		padding: 25px;
-		text-decoration: none;
-		font-size: 18px;
+		font-size: 20px;
 		line-height: 25px;
 		border-radius: 25px;
+		font-family: 'Cabin Condensed', sans-serif;
 	}
-
-    .wavy {
-        position: relative;
-    }
-
-     .wavy span {
-        position: relative;
-        display: inline-block;
-        color: #fff;
-        font-size: 2em;
-        text-transform: uppercase;
-        animation: animate 2s ease-in-out infinite;
-        animation-delay: calc(0.1s * var(--i));
-    }
 
     @keyframes animate {
         0% {
@@ -363,6 +352,7 @@
             transform: translateY(0px);
         }
     }
+
 	@-webkit-keyframes fade {
 		from {
 			opacity: 0.4;
@@ -379,13 +369,17 @@
 		to {
 			opacity: 1;
 		}
-	}
+    }
+
 	@media screen and (max-width: 500px) {
-		.header a {
-			float: none;
-			display: block;
-			text-align: left;
-		}
+        .about-column {
+            font-size: 1.5em;
+        }
+
+        .about {
+            width: 50vw;
+        }
+
 		.topnav a {
 			float: none;
 			display: block;
@@ -396,10 +390,60 @@
 			display: inline-block;
 			text-align: left;
 		}
-		#welcome {
-			height: 50vh;
-		}
+
+        .centered-text {
+            font-size: 1rem;
+            letter-spacing: 0;
+        }
+
+        .centered {
+            position: absolute;
+            left: 50%;
+            width: 100vw;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cabin Condensed', sans-serif;
+            letter-spacing: 0;
+            line-height: 0.5;
+            color: darkslategrey;
+        }
+        .centered span {
+            will-change: filter;
+            font-size: 2rem;
+            letter-spacing: 0;
+        }
 	}
 
+	svg {
+		width: 100vw;
+		height: auto;
+	}
+
+	path {
+		fill: #000000;
+		opacity: 1;
+	}
+
+	label {
+		position: absolute;
+		top: 1em;
+		left: 1em;
+	}
+
+	.centered {
+		font-size: 5.5em;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		font-family: 'Overpass';
+		letter-spacing: 0.12em;
+		color: darkslategrey;
+		font-weight: 400;
+	}
+
+	.centered span {
+		will-change: filter;
+	}
 
 </style>
