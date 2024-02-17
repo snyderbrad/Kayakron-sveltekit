@@ -34,5 +34,10 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
+# deploy on cpanel
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+npm run build
+
+zip the build folder
+upload to the public_html folder
+move everthing in build/* to build/
