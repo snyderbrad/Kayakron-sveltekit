@@ -55,9 +55,7 @@
 			<Hamburger bind:open />
 			{#if open}
 				<a href="tel:3306060543" class="fa fa-mobile-phone header-text">(330)606-0543</a>
-				<a target="_blank" class="header-text" rel="noopener noreferrer" href={infographic}
-					>How To</a
-				>
+				<a target="_blank" class="header-text" rel="noopener noreferrer" href={infographic}>How To</a>
 			{/if}
 		</div>
 		{#if visible}
